@@ -26,20 +26,20 @@ export default function FingerPrintCheck(props) {
             })
     }, [])
     const click = () => {
-        //   ReactNativeBiometrics.isSensorAvailable()
-        // .then((resultObject) => {
-        //   const { available, biometryType } = resultObject
+          ReactNativeBiometrics.isSensorAvailable()
+        .then((resultObject) => {
+          const { available, biometryType } = resultObject
 
-        //   if (available && biometryType === ReactNativeBiometrics.TouchID) {
-        //     console.log('TouchID is supported')
-        //   } else if (available && biometryType === ReactNativeBiometrics.FaceID) {
-        //     console.log('FaceID is supported')
-        //   } else if (available && biometryType === ReactNativeBiometrics.Biometrics) {
-        //     console.log('Biometrics is supported')
-        //   } else {
-        //     console.log('Biometrics not supported')
-        //   }
-        // })
+          if (available && biometryType === ReactNativeBiometrics.TouchID) {
+            console.log('TouchID is supported')
+          } else if (available && biometryType === ReactNativeBiometrics.FaceID) {
+            console.log('FaceID is supported')
+          } else if (available && biometryType === ReactNativeBiometrics.Biometrics) {
+            console.log('Biometrics is supported',available,biometryType)
+          } else {
+            console.log('Biometrics not supported')
+          }
+        })
 
 
 

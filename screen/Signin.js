@@ -34,7 +34,7 @@ export default function Signin(props) {
   }
   const getData = () => {
     param.append("email", email);
-    axios.post(baseUrl+"/login", param, {
+    axios.post(baseUrl + "/login", param, {
       headers: {
         'content-Type': 'application/x-www-form-urlencoded'
       }
@@ -74,6 +74,7 @@ export default function Signin(props) {
         onChangeText={password => setpassword(password)}
         value={password}
       />
+      
 
       <TouchableOpacity activeOpacity={1} onPress={() => handleLogin()} >
         {!lottieloading ?
@@ -91,11 +92,16 @@ export default function Signin(props) {
             loopa
           />}
       </TouchableOpacity>
-
+      {/* <Icon
+        name="arrow-right"
+        size={15}
+        color="blue"
+      /> */}
       <Button
         title="Don't have an account? Sign Up"
         onPress={() => props.navigation.navigate("Signup")}
       />
+
     </View>
   )
 }
