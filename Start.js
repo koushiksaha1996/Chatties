@@ -4,42 +4,37 @@ import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import Signin from './screen/Signin';
 import Signup from './screen/Signup';
 import Daskboard from './screen/Dashboard/Daskboard';
-import { initializeApp } from "firebase/app";
-import { getAnalytics } from "firebase/analytics";
+
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import Splash from './screen/splash/Splash';
 import FingerPrintCheck from './screen/Fingerprint/FingerPrintCheck';
 import { useDispatch, useSelector } from 'react-redux';
-import { getAuth, onAuthStateChanged } from '@firebase/auth';
+import auth from '@react-native-firebase/auth'
 import { authentication } from './redux/actions/auth/Auth';
-
-const firebaseConfig = {
-    apiKey: "AIzaSyC4DOwT2D2lx-rHDUwYTZilYK1PM9gHzX4",
-    authDomain: "storage-d33cb.firebaseapp.com",
-    projectId: "storage-d33cb",
-    storageBucket: "storage-d33cb.appspot.com",
-    messagingSenderId: "767146452632",
-    appId: "1:767146452632:web:31a3fe772e8bc4fff7d2ed",
-    measurementId: "G-RV6JXNXRRT"
-};
-
-// Initialize Firebase
-const app = initializeApp(firebaseConfig);
-// const analytics = getAnalytics(app);
 
 
 export default function Start() {
     const [isloading, setisloading] = useState(true)
     const state = useSelector(state => state)
     const dispatch= useDispatch()
-    const auth = getAuth();
+    //console.log("________________check user------------------->",auth().onAuthStateChanged(user=>{}))
     
     console.log("------------------redux---------->", state)
     useEffect(() => {
-        onAuthStateChanged(auth, (user) => {
+        auth().onAuthStateChanged((user) => {
             if (user) {
-                console.log(user)
-                dispatch(authentication(true))
+                console.log(user.uid)
+                //dispatch(authentication(true))
+                AsyncStorage.getItem("userData").then(res=>{
+                    console.log("is token present",res)
+                    if(res==user.uid){
+                        console.log("action login ")
+                        dispatch(authentication(true))
+                    }
+                    else{
+                        console.log("action failed login ")
+                    }
+                })
             } else {
                 dispatch(authentication(false))
             }

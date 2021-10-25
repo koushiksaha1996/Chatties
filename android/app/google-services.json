@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "981731279508",
+    "project_id": "chatties-c24b8",
+    "storage_bucket": "chatties-c24b8.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:981731279508:android:72f2286c8207720499aa81",
+        "android_client_info": {
+          "package_name": "com.chatties"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "981731279508-budbngu3saspdn5bav9e03ki1f6bikod.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.chatties",
+            "certificate_hash": "5e8f16062ea3cd2c4a0d547876baa6f38cabf625"
+          }
+        },
+        {
+          "client_id": "981731279508-8s3etokk9lmvhetug5p8hvf0mjai3hin.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyD4NcEYhPphbRz5XCQSaRPiUNqlmeRdo7g"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "981731279508-8s3etokk9lmvhetug5p8hvf0mjai3hin.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

@@ -3,12 +3,12 @@ import React, { useEffect } from 'react'
 import { Text, TouchableOpacity, View } from 'react-native'
 import { Header } from 'react-native-elements'
 import LottieView from 'lottie-react-native';
-import { getAuth, signOut } from '@firebase/auth';
+import auth from '@react-native-firebase/auth'
 import { useDispatch } from 'react-redux';
 import { authentication } from '../../redux/actions/auth/Auth';
 
 export default function Daskboard(props) {
-    const dispatch=useDispatch()
+    const dispatch = useDispatch()
     useEffect(() => {
         AsyncStorage.getItem("userData").then(data => {
             console.log(data)
@@ -30,13 +30,13 @@ export default function Daskboard(props) {
         )
     }
     const logout = () => {
-        const auth = getAuth();
-        signOut(auth).then(() => {
-           dispatch(authentication(false))
+        auth()
+            .signOut().then(() => {
+                dispatch(authentication(false))
 
-        }).catch((error) => {
-            // An error happened.
-        });
+            }).catch((error) => {
+                // An error happened.
+            });
         AsyncStorage.removeItem("userData")
     }
     return (

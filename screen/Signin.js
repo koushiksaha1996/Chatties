@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react'
 import { StyleSheet, Text, TextInput, View, Button, BackHandler, Alert, TouchableOpacity } from 'react-native'
 import { useSafeArea } from 'react-native-safe-area-context'
 import { useIsFocused } from '@react-navigation/native'
-import { getAuth, signInWithEmailAndPassword } from '@firebase/auth'
+import auth from '@react-native-firebase/auth'
 import axios from 'axios'
 import AsyncStorage from '@react-native-async-storage/async-storage'
 import { Header } from 'react-native-elements'
@@ -26,12 +26,12 @@ export default function Signin(props) {
   
   const handleLogin = (props) => {
     setlottieloading(true)
-    const auth = getAuth()
-    signInWithEmailAndPassword(auth, email, password).then(userdata => {
+    auth()
+      .signInWithEmailAndPassword(email, password).then(userdata => {
 
       console.log("existing user", userdata)
       getData()
-      dispatch(authentication(true))
+      
     }).catch(error => {
       setlottieloading(false)
       seterror(error.message)
@@ -44,9 +44,11 @@ export default function Signin(props) {
         'content-Type': 'application/x-www-form-urlencoded'
       }
     }).then(res => {
+      console.log("login user",res.data.user.tokenid)
       if (res.data.errorMessage == 200) {
         AsyncStorage.setItem("userData", res.data.user.tokenid)
         // props.navigation.navigate("Dashboard")
+        dispatch(authentication(true))
       }
     })
   }

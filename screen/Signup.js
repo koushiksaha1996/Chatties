@@ -3,7 +3,7 @@ import React, { useState, useEffect } from 'react'
 import { StyleSheet, Text, TextInput, View, Button, TouchableOpacity, Image, Platform, PermissionsAndroid, } from 'react-native'
 import { useSafeArea } from 'react-native-safe-area-context'
 import { useIsFocused } from '@react-navigation/native'
-import { getAuth, createUserWithEmailAndPassword } from "firebase/auth";
+import auth from '@react-native-firebase/auth'
 import axios from 'axios';
 import { Avatar, Header } from 'react-native-elements';
 import LottieView from 'lottie-react-native'
@@ -13,12 +13,12 @@ import {
     launchImageLibrary
 } from 'react-native-image-picker';
 import { useSelector } from 'react-redux';
-import { getStorage, ref, uploadBytes ,getDownloadURL} from "firebase/storage";
+
 
 
 
 export default function Signup(props) {
-    const storage = getStorage()
+
 
     const area = useSafeArea()
     const [name, setname] = useState("")
@@ -30,48 +30,15 @@ export default function Signup(props) {
     const isfocused = useIsFocused()
     const param = new URLSearchParams();
     const handleSignup = () => {
-        const auth = getAuth()
-        createUserWithEmailAndPassword(auth, email, password).then(usercredential => {
-            storeData(usercredential)
-        }).catch(error => {
-            seterror(error.message)
-        })
-    }
-    console.log(path)
-    useEffect(() => {
-        if (filePath[0]?.uri) {
-            const storageref = ref(storage, 'avater')
-            uploadBytes(storageref, filePath[0]?.uri).then((snapshot) => {
-                console.log('Uploaded a blob or file!');
-                download()
-            });
-            console.log("firebase ref ", storage)
-        }
-    }, [filePath[0]?.uri])
-
-    const download = () => {
-        getDownloadURL(ref(storage, 'ok.jpg'))
-            .then((url) => {
-                // `url` is the download URL for 'images/stars.jpg'
-
-                // This can be downloaded directly:
-                // const xhr = new XMLHttpRequest();
-                // xhr.responseType = 'blob';
-                // xhr.onload = (event) => {
-                //     const blob = xhr.response;
-                // };
-                // xhr.open('GET', url);
-                // xhr.send();
-
-                // // Or inserted into an <img> element
-                // const img = document.getElementById('myimg');
-                // img.setAttribute('src', url);
-                console.log("download link",url)
+        auth()
+            .createUserWithEmailAndPassword(email, password).then(usercredential => {
+                storeData(usercredential)
+            }).catch(error => {
+                seterror(error.message)
             })
-            .catch((error) => {
-                // Handle any errors
-            });
     }
+
+
     const leftcomponents = () => {
         return (
             <>
@@ -90,11 +57,10 @@ export default function Signup(props) {
     //apiKey createdAt lastLoginAt
 
     const storeData = (user) => {
-        console.log("new user ", user._tokenResponse.idToken)
-
+        console.log("new user", user.user.uid)
         param.append("name", name);
         param.append("email", email);
-        param.append("tokenid", user._tokenResponse.idToken);
+        param.append("tokenid", user.user.uid);
 
         axios.post(baseUrl + "/createaccnt", param, {
             headers: {
