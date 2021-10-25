@@ -9,6 +9,8 @@ import { Header } from 'react-native-elements'
 import LottieView from 'lottie-react-native';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import { baseUrl } from '../apiUrl/Url'
+import { useDispatch } from 'react-redux'
+import { authentication } from '../redux/actions/auth/Auth'
 
 export default function Signin(props) {
   const area = useSafeArea()
@@ -19,7 +21,9 @@ export default function Signin(props) {
   const isfocused = useIsFocused()
   const param = new URLSearchParams();
 
-
+  const dispatch= useDispatch();
+  
+  
   const handleLogin = (props) => {
     setlottieloading(true)
     const auth = getAuth()
@@ -27,6 +31,7 @@ export default function Signin(props) {
 
       console.log("existing user", userdata)
       getData()
+      dispatch(authentication(true))
     }).catch(error => {
       setlottieloading(false)
       seterror(error.message)
@@ -46,7 +51,7 @@ export default function Signin(props) {
     })
   }
   return (
-    <View style={{ paddingTop: area.top, paddingBottom: area.bottom, width: '100%', height: "100%", alignItems: "center" }}>
+    <View style={{  width: '100%', height: "100%", alignItems: "center" }}>
       <Header
         containerStyle={{
           backgroundColor: 'black',
@@ -101,7 +106,7 @@ export default function Signin(props) {
         title="Don't have an account? Sign Up"
         onPress={() => props.navigation.navigate("Signup")}
       />
-
+    
     </View>
   )
 }
