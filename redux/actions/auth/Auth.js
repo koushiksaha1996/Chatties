@@ -1,4 +1,4 @@
-import { AUTH_STATUS } from "../../types/Actiontypes"
+import { ADD_USER_DATA, AUTH_STATUS } from "../../types/Actiontypes"
 
 export const authentication=(item)=>{
     return{
