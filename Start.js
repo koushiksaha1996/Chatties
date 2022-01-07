@@ -18,6 +18,10 @@ import axios from 'axios';
 import {baseUrl} from './apiUrl/Url';
 import {adduser} from './redux/actions/profiledata/Userdata';
 import {AppState} from 'react-native';
+import Loader from './Component/Loader/Loader';
+import {setLoader} from './redux/actions/Loader/Loader';
+import ForgotPassword from './screen/ForgotPassword';
+import Profile from './screen/Profile/Profile';
 
 export default function Start() {
   const [isloading, setisloading] = useState(true);
@@ -38,7 +42,6 @@ export default function Start() {
     setTimeout(() => {
       setisloading(false);
     }, 3000);
-
     const subscription = AppState.addEventListener('change', nextAppState => {
       if (
         appState.current.match(/inactive|background/) &&
@@ -46,7 +49,7 @@ export default function Start() {
       ) {
         console.log('App has come to the foreground!');
       }
-      console.log("next state",nextAppState)
+      console.log('next state', nextAppState);
       appState.current = nextAppState;
       setAppStateVisible(appState.current);
       console.log('AppState', appState.current);
@@ -145,7 +148,7 @@ export default function Start() {
       // (optional) Called when Registered Action is pressed and invokeApp is false, if true onNotification will be called (Android)
       onAction: function (notification) {
         // console.log('ACTION:', notification.action);
-         console.log('NOTIFICATION:', notification);
+        console.log('NOTIFICATION:', notification);
         // process the action
       },
 
@@ -189,10 +192,10 @@ export default function Start() {
 
   const getToken = async () => {
     let fcmToken = await AsyncStorage.getItem('fcmToken');
-    //console.log('firebase messaging fcm token from async storage', fcmToken);
-    if (!fcmToken) {
+    console.log('firebase messaging fcm token from async storage', fcmToken);
+    if (!fcmToken || fcmToken) {
       fcmToken = await messaging().getToken();
-      //console.log('firebase messaging fcm token ', fcmToken);
+      console.log('firebase messaging fcm token ', fcmToken);
       if (fcmToken) {
         // user has a device token
         await AsyncStorage.setItem('fcmToken', fcmToken);
@@ -225,11 +228,16 @@ export default function Start() {
                   component={FingerPrintCheck}
                 />
                 <Stack.Screen name="Daskboard" component={Daskboard} />
+                <Stack.Screen name='Profile' component={Profile} />
               </>
             ) : (
               <>
                 <Stack.Screen name="Signin" component={Signin} />
                 <Stack.Screen name="Signup" component={Signup} />
+                <Stack.Screen
+                  name="ForgotPassword"
+                  component={ForgotPassword}
+                />
                 <Stack.Screen
                   name="ProfileImageUpload"
                   component={ProfileImageUpload}
@@ -237,6 +245,7 @@ export default function Start() {
               </>
             )}
           </Stack.Navigator>
+          <Loader />
         </NavigationContainer>
       )}
     </>

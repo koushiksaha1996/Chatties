@@ -10,7 +10,7 @@ import {
   Platform,
   PermissionsAndroid,
   Alert,
-  StatusBar
+  StatusBar,
 } from 'react-native';
 
 import {useIsFocused} from '@react-navigation/native';
@@ -20,6 +20,7 @@ import {Avatar, Header} from 'react-native-elements';
 import LottieView from 'lottie-react-native';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 import Icon1 from 'react-native-vector-icons/Octicons';
+import Icon2 from 'react-native-vector-icons/AntDesign';
 
 export default function Signup(props) {
   const [name, setname] = useState('');
@@ -35,11 +36,12 @@ export default function Signup(props) {
         .createUserWithEmailAndPassword(email, password)
         .then(usercredential => {
           // storeData(usercredential)
+          //usercredential.sendEmailVerification();
           props.navigation.navigate('ProfileImageUpload', {
             user: JSON.stringify(usercredential),
             name: name,
             email: email,
-            password:password,
+            password: password,
           });
         })
         .catch(error => {
@@ -52,6 +54,14 @@ export default function Signup(props) {
 
   return (
     <View style={styles.container}>
+      <View style={styles.backbtn}>
+        <Icon2
+          name="arrowleft"
+          color="#0276f1"
+          size={30}
+          onPress={() => props.navigation.goBack()}
+        />
+      </View>
       <StatusBar barStyle="dark-content" backgroundColor={'white'} />
       <Image source={require('./assets/logo.jpg')} style={styles.logo} />
       <Text
@@ -64,9 +74,9 @@ export default function Signup(props) {
         }}>
         Create Account !
       </Text>
-      
+
       <View style={styles.innerview}>
-      <View style={styles.textinputview}>
+        <View style={styles.textinputview}>
           <View style={styles.texticon}>
             <Icon name="account-circle" color="#0276f1" size={20} />
           </View>
@@ -123,7 +133,7 @@ export default function Signup(props) {
             )}
           </View>
         </View>
-        
+
         <View style={styles.loginbtncontainer}>
           <TouchableOpacity
             style={styles.loginbtn}
@@ -224,5 +234,13 @@ const styles = StyleSheet.create({
     color: 'white',
     fontWeight: '600',
     fontSize: 20,
+  },
+  backbtn: {
+    padding: 8,
+    position: 'absolute',
+    top: 10,
+    left: 20,
+    borderRadius: 50,
+    backgroundColor: 'white',
   },
 });

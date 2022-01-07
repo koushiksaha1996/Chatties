@@ -22,7 +22,8 @@ import {baseUrl} from '../apiUrl/Url';
 import {useDispatch} from 'react-redux';
 import {authentication} from '../redux/actions/auth/Auth';
 import {getFormData} from './Function';
-import { adduser } from '../redux/actions/profiledata/Userdata';
+import {adduser} from '../redux/actions/profiledata/Userdata';
+import {setLoader} from '../redux/actions/Loader/Loader';
 
 export default function Signin(props) {
   const [email, setemail] = useState('');
@@ -30,21 +31,21 @@ export default function Signin(props) {
   const [error, seterror] = useState(null);
   const isfocused = useIsFocused();
   const [secviewpass, setsecviewpass] = useState(true);
-  const [newapp,setnewapp] = useState("yes")
+  const [newapp, setnewapp] = useState('yes');
+  const [loginbtn, setLoginbtn] = useState(false);
   const param = new URLSearchParams();
 
   const dispatch = useDispatch();
-  useEffect(()=>{
-    AsyncStorage.getItem("new_install").then(res=>{
+  useEffect(() => {
+    AsyncStorage.getItem('new_install').then(res => {
       //console.log(res)
-      if(res){
-        setnewapp(res)
+      if (res) {
+        setnewapp(res);
+      } else {
+        AsyncStorage.setItem('new_install', 'no');
       }
-      else{
-        AsyncStorage.setItem("new_install","no")
-      }
-    })
-  },[])
+    });
+  }, []);
   // const Check = () => {
   //   const payload = getFormData({
   //     user_id: userid,
@@ -86,21 +87,21 @@ export default function Signin(props) {
   //     });
   // };
 
-  const handleLogin = props => {
-    
-    if(email && password){
+  const handleLogin = () => {
+    dispatch(setLoader(true));
+    setLoginbtn(true);
+    if (email && password) {
       auth()
-      .signInWithEmailAndPassword(email, password)
-      .then(userdata => {
-        //console.log('existing user', userdata);
-        getData();
-      })
-      .catch(error => {
-        seterror(error.message);
-      });
-    }
-    else{
-      alert("enter cradential")
+        .signInWithEmailAndPassword(email, password)
+        .then(userdata => {
+          //console.log('existing user', userdata);
+          getData();
+        })
+        .catch(error => {
+          seterror(error.message);
+        });
+    } else {
+      alert('enter cradential');
     }
   };
   const getData = () => {
@@ -117,17 +118,35 @@ export default function Signin(props) {
         //console.log('login user', res.data);
         if (res.data.errorMessage == 200) {
           AsyncStorage.setItem('userData', res.data.user.tokenid);
+          dispatch(setLoader(false));
           dispatch(authentication(true));
-          dispatch(adduser(res.data.user))
+          dispatch(adduser(res.data.user));
         }
       });
   };
   return (
     <View style={styles.container}>
-      <StatusBar barStyle='dark-content' backgroundColor={"white"}/>
+      <StatusBar barStyle="dark-content" backgroundColor={'white'} />
       <Image source={require('./assets/logo.jpg')} style={styles.logo} />
-      <Text style={{alignSelf:"center",fontSize:30,color:'black',fontWeight:"bold",marginBottom:20}}>{newapp=="yes" ?  "Welcome to our app!" : "Welcome back!"}</Text>
-      <Text style={{alignSelf:"center",fontSize:15,fontWeight:"400",marginBottom:20}}>Login to your existing account</Text>
+      <Text
+        style={{
+          alignSelf: 'center',
+          fontSize: 30,
+          color: 'black',
+          fontWeight: 'bold',
+          marginBottom: 20,
+        }}>
+        {newapp == 'yes' ? 'Welcome to our app!' : 'Welcome back!'}
+      </Text>
+      <Text
+        style={{
+          alignSelf: 'center',
+          fontSize: 15,
+          fontWeight: '400',
+          marginBottom: 20,
+        }}>
+        Login to your existing account
+      </Text>
       <View style={styles.innerview}>
         <View style={styles.textinputview}>
           <View style={styles.texticon}>
@@ -140,7 +159,7 @@ export default function Signin(props) {
             onChangeText={email => setemail(email)}
             value={email}
             textAlign="left"
-            autoCompleteType='off'
+            autoCompleteType="off"
           />
         </View>
         <View style={styles.textinputview}>
@@ -174,15 +193,27 @@ export default function Signin(props) {
             )}
           </View>
         </View>
-        <Text style={styles.forgetpass}>Forget Password?</Text>
+        <Text
+          style={styles.forgetpass}
+          onPress={() => props.navigation.navigate('ForgotPassword')}>
+          Forget Password?
+        </Text>
         <View style={styles.loginbtncontainer}>
-          <TouchableOpacity style={styles.loginbtn} activeOpacity={1} onPress={() => handleLogin()}>
+          <TouchableOpacity
+            style={!loginbtn ? styles.loginbtn : styles.loginbtndis}
+            disabled={loginbtn}
+            activeOpacity={1}
+            onPress={() => handleLogin()}>
             <Text style={styles.loginbtntext}>Login</Text>
           </TouchableOpacity>
         </View>
-        <View style={{flexDirection:"row"}}>
-        <Text style={styles.forgetpass}>Dont't have an account? </Text>
-        <Text style={styles.signup} onPress={() => props.navigation.navigate('Signup')}>Sign Up</Text>
+        <View style={{flexDirection: 'row'}}>
+          <Text style={styles.forgetpass}>Dont't have an account? </Text>
+          <Text
+            style={styles.signup}
+            onPress={() => props.navigation.navigate('Signup')}>
+            Sign Up
+          </Text>
         </View>
       </View>
     </View>
@@ -238,35 +269,43 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
   },
-  forgetpass:{
-    alignSelf:"center",
-    fontSize:15,
-    fontWeight:"400",
-    marginBottom:20
+  forgetpass: {
+    alignSelf: 'center',
+    fontSize: 15,
+    fontWeight: '400',
+    marginBottom: 20,
   },
-  signup:{
-    alignSelf:"flex-end",
-    fontSize:15,
-    fontWeight:"500",
-    color:"#3a8cfd",
-    marginBottom:20
+  signup: {
+    alignSelf: 'flex-end',
+    fontSize: 15,
+    fontWeight: '500',
+    color: '#3a8cfd',
+    marginBottom: 20,
   },
-  loginbtncontainer:{
-    width:"100%",
-    alignItems:"center",
-    marginBottom:35
+  loginbtncontainer: {
+    width: '100%',
+    alignItems: 'center',
+    marginBottom: 35,
   },
-  loginbtn:{
-    width:"50%",
-    alignItems:"center",
-    justifyContent:"center",
-    backgroundColor:"#0148a4",
-    borderRadius:25,
-    padding:10
+  loginbtn: {
+    width: '50%',
+    alignItems: 'center',
+    justifyContent: 'center',
+    backgroundColor: '#0148a4',
+    borderRadius: 25,
+    padding: 10,
   },
-  loginbtntext:{
-    color:"white",
-    fontWeight:"600",
-    fontSize:20
-  }
+  loginbtndis: {
+    width: '50%',
+    alignItems: 'center',
+    justifyContent: 'center',
+    backgroundColor: 'grey',
+    borderRadius: 25,
+    padding: 10,
+  },
+  loginbtntext: {
+    color: 'white',
+    fontWeight: '600',
+    fontSize: 20,
+  },
 });

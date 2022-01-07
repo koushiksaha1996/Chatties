@@ -1,4 +1,4 @@
-import {ADD_USER_DATA} from '../../types/Actiontypes';
+import {ADD_USER_DATA, PROFILE_PIC} from '../../types/Actiontypes';
 
 const initialState = {
   ID: '',
@@ -8,6 +8,7 @@ const initialState = {
   tokenID: '',
   isactive: '',
   lastSeen: '',
+  profile_pic:'',
 };
 
 const userData = (state = initialState, action) => {
@@ -23,6 +24,13 @@ const userData = (state = initialState, action) => {
         isactive: action.payload.isActive,
         lastSeen: action.payload.lastSeen,
       };
+
+    case PROFILE_PIC:
+      return{
+        ...state,
+        profile_pic:action.payload
+      };
+
     default:
       return state;
   }

@@ -1,4 +1,4 @@
-import { ADD_USER_DATA } from "../../types/Actiontypes"
+import { ADD_USER_DATA, PROFILE_PIC } from "../../types/Actiontypes"
 
 export const adduser=(item)=>{
     return{
@@ -6,4 +6,10 @@ export const adduser=(item)=>{
         payload:item  
     }
     
+}
+export const addProfilePic=(item)=>{
+    return{
+        type:PROFILE_PIC,
+        payload:item
+    }
 }

@@ -1,108 +1,104 @@
-
-import LottieView from 'lottie-react-native'
-import React, { useEffect } from 'react'
-import { Text, TouchableOpacity, View } from 'react-native'
-import ReactNativeBiometrics from 'react-native-biometrics'
-import { Button } from 'react-native-elements';
+import LottieView from 'lottie-react-native';
+import React, {useEffect} from 'react';
+import {Text, TouchableOpacity, View} from 'react-native';
+import ReactNativeBiometrics from 'react-native-biometrics';
+import {Button} from 'react-native-elements';
 import Icon from 'react-native-vector-icons/FontAwesome';
 
 export default function FingerPrintCheck(props) {
-    let epochTimeSeconds = Math.round((new Date()).getTime() / 1000).toString()
-    let payload = epochTimeSeconds + 'some message'
-    useEffect(() => {
-        ReactNativeBiometrics.simplePrompt({ promptMessage: 'Confirm fingerprint' })
-            .then((resultObject) => {
-                const { success } = resultObject
+  let epochTimeSeconds = Math.round(new Date().getTime() / 1000).toString();
+  let payload = epochTimeSeconds + 'some message';
+  useEffect(() => {
+    ReactNativeBiometrics.simplePrompt({promptMessage: 'Confirm fingerprint'})
+      .then(resultObject => {
+        const {success} = resultObject;
 
-                if (success) {
-                    console.log('successful biometrics provided', resultObject)
-                    props.navigation.replace("Daskboard")
-                } else {
-                    console.log('user cancelled biometric prompt')
-                }
-            })
-            .catch(() => {
-                console.log('biometrics failed')
-            })
-    }, [])
-    const click = () => {
-          ReactNativeBiometrics.isSensorAvailable()
-        .then((resultObject) => {
-          const { available, biometryType } = resultObject
+        if (success) {
+          console.log('successful biometrics provided', resultObject);
+          props.navigation.replace('Daskboard');
+        } else {
+          console.log('user cancelled biometric prompt');
+        }
+      })
+      .catch(() => {
+        console.log('biometrics failed');
+      });
+  }, []);
+  const click = () => {
+    ReactNativeBiometrics.isSensorAvailable().then(resultObject => {
+      const {available, biometryType} = resultObject;
 
-          if (available && biometryType === ReactNativeBiometrics.TouchID) {
-            console.log('TouchID is supported')
-          } else if (available && biometryType === ReactNativeBiometrics.FaceID) {
-            console.log('FaceID is supported')
-          } else if (available && biometryType === ReactNativeBiometrics.Biometrics) {
-            console.log('Biometrics is supported',available,biometryType)
-          } else {
-            console.log('Biometrics not supported')
-          }
-        })
+      if (available && biometryType === ReactNativeBiometrics.TouchID) {
+        console.log('TouchID is supported');
+      } else if (available && biometryType === ReactNativeBiometrics.FaceID) {
+        console.log('FaceID is supported');
+      } else if (
+        available &&
+        biometryType === ReactNativeBiometrics.Biometrics
+      ) {
+        console.log('Biometrics is supported', available, biometryType);
+      } else {
+        console.log('Biometrics not supported');
+      }
+    });
 
+    // ReactNativeBiometrics.createKeys('Confirm fingerprint')
+    // .then((resultObject) => {
+    //   const { publicKey } = resultObject
+    //   console.log("public key",publicKey)
+    //   //sendPublicKeyToServer(publicKey)
+    // })
+    // ReactNativeBiometrics.biometricKeysExist()
+    // .then((resultObject) => {
+    //   const { keysExist } = resultObject
 
+    //   if (keysExist) {
+    //     console.log('Keys exist')
+    //   } else {
+    //     console.log('Keys do not exist or were deleted')
+    //   }
+    // })
 
-        // ReactNativeBiometrics.createKeys('Confirm fingerprint')
-        // .then((resultObject) => {
-        //   const { publicKey } = resultObject
-        //   console.log("public key",publicKey)
-        //   //sendPublicKeyToServer(publicKey)
-        // })
-        // ReactNativeBiometrics.biometricKeysExist()
-        // .then((resultObject) => {
-        //   const { keysExist } = resultObject
+    // ReactNativeBiometrics.createSignature({
+    //     promptMessage: 'Sign in',
+    //     payload: payload
+    //   })
+    //   .then((resultObject) => {
+    //     const { success, signature } = resultObject
 
-        //   if (keysExist) {
-        //     console.log('Keys exist')
-        //   } else {
-        //     console.log('Keys do not exist or were deleted')
-        //   }
-        // })
+    //     if (success) {
+    //       console.log(signature)
+    //       //verifySignatureWithServer(signature, payload)
+    //     }
+    //   })
 
+    ReactNativeBiometrics.simplePrompt({promptMessage: 'Confirm fingerprint'})
+      .then(resultObject => {
+        const {success} = resultObject;
 
-        // ReactNativeBiometrics.createSignature({
-        //     promptMessage: 'Sign in',
-        //     payload: payload
-        //   })
-        //   .then((resultObject) => {
-        //     const { success, signature } = resultObject
+        if (success) {
+          console.log('successful biometrics provided', resultObject);
+          props.navigation.replace('Daskboard');
+        } else {
+          console.log('user cancelled biometric prompt');
+        }
+      })
+      .catch(() => {
+        console.log('biometrics failed');
+      });
+  };
+  return (
+    <View style={{flex: 1, alignItems: 'center', justifyContent: 'center'}}>
+      <TouchableOpacity onPress={() => click()}>
+        <LottieView
+          style={{width: 200, height: 200}}
+          source={require('./finger.json')}
+          autoPlay
+          loop
+        />
+      </TouchableOpacity>
 
-        //     if (success) {
-        //       console.log(signature)
-        //       //verifySignatureWithServer(signature, payload)
-        //     }
-        //   })
-
-        ReactNativeBiometrics.simplePrompt({ promptMessage: 'Confirm fingerprint' })
-            .then((resultObject) => {
-                const { success } = resultObject
-
-                if (success) {
-                    console.log('successful biometrics provided', resultObject)
-                    props.navigation.replace("Daskboard")
-                } else {
-                    console.log('user cancelled biometric prompt')
-                }
-            })
-            .catch(() => {
-                console.log('biometrics failed')
-            })
-
-    }
-    return (
-        <View style={{ flex: 1, alignItems: "center", justifyContent: "center" }}>
-
-            <TouchableOpacity onPress={() => click()}>
-                <LottieView
-                    style={{ width: 200, height: 200 }}
-                    source={require('./finger.json')}
-                    autoPlay
-                    loop
-                />
-            </TouchableOpacity>
-
-            {/* <Button
+      {/* <Button
                 title="Solid Button"
             />
 
@@ -154,6 +150,6 @@ export default function FingerPrintCheck(props) {
             >
                 Login with Facebook
             </Icon.Button> */}
-        </View>
-    )
+    </View>
+  );
 }
